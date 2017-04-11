@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="jquery-3.2.0.js"></script>
+    <style>
+    *{margin: 0;padding: 0}
+    ul,li{list-style: none}
+    .wapper {
+        position: relative;
+        width:400px;
+        height: 280px;
+    }
+    .wapper .img-ct{
+        position: relative;
+        width:400px;
+        height: 280px;
+    }
+    .wapper .img-ct li{
+        position: absolute;
+        display: none;
+    }
+    .wapper .img-ct img{
+        width: 400px;
+        height: 280px;
+    } 
+    .btn{
+        display: inline-block;
+        text-decoration: none;
+        width:30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 50%;
+        background-color: #fff;
+        opacity: 0.8;
+        text-align: center;
+        font-size: 20px;
+        color: #000;
+        position: absolute;
+        top:50%;
+    }
+    .pre{left: 10px;}
+    .next{right: 10px;}
+    .btn-list{
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform:translate(-50%);
+    }
+    .btn-list >li{
+        width:20px;
+        height:6px;
+        border-radius: 3px;
+        background-color: #fff;
+        float:left;
+        margin: 0 7px;
+        cursor: pointer;
+    }
+     .btn-list .active{
+         background-color: lightcoral;
+     }
+    </style>
+</head>
+<body>
+    <div class="wapper">
+        <ul class="img-ct">
+            <li data-img=0 class="kk" ><a href="javascript:;"><img src="http://cdn.jirengu.com/book.jirengu.com/img/26.jpg" alt=""></a></li>
+            <li data-img=1><a href="javascript:;"><img src="http://cdn.jirengu.com/book.jirengu.com/img/28.jpg" alt=""></a></li>
+            <li data-img=2><a href="javascript:;"><img src="http://cdn.jirengu.com/book.jirengu.com/img/27.jpg" alt=""></a></li>
+            <li data-img=3><a href="javascript:;"><img src="http://cdn.jirengu.com/book.jirengu.com/img/20.jpg" alt=""></a></li>    
+        </ul>
+        <a class="btn pre" href="javascript:;"><strong>&lt</strong></a>
+        <a class="btn next" href="javascript:;"><strong>&gt</strong></a>
+        <ul class="btn-list">
+            <li class='active'></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script>
+    var $imgCt = $('.img-ct'),
+        $imgLis = $imgCt.children(),
+        $prebtn = $('.pre'),
+        $nextbtn = $('.next'),
+        $bullet = $('.btn-list'),
+        $box = $('.wapper');
+
+    var nowPage = 0
+    var isAnimate = false
+
+    $nextbtn.on('click',function(){
+         play((nowPage+1)%4)   
+    })
+    $prebtn.on('click',function(){    
+        play((nowPage-1)%4);
+    })
+    $bullet.on('click','li',function(){
+        play($(this).index());
+    })
+    function play(index){
+        if(isAnimate) return;
+        isAnimate = true;
+        $imgLis.eq(nowPage).fadeOut(700);
+        $imgLis.eq(index).fadeIn(700,function(){
+            isAnimate=false;
+        })
+        nowPage = index;
+        setArrt();
+    }
+    play(0);
+    autoPlay();
+    function setArrt(){
+         $bullet.children().removeClass('active').eq(nowPage).addClass('active')
+    }
+     $box.on('mouseenter',function(){
+        clearInterval(clock);  //鼠标进入窗口取消自动播放
+     })
+     $box.on('mouseleave',function(){
+        autoPlay();  //鼠标离开窗口，恢复自动播放
+     })
+    function autoPlay(){
+        clock = setInterval(function(){
+            play((nowPage+1)%4);
+        }, 1000);	
+    }
+
+    </script>
+</body>
+</html>

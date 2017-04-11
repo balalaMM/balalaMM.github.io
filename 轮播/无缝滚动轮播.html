@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="jquery-3.2.0.js"></script>
+    <style>
+    *{margin:0;padding:0 ;}
+    ul,li{
+        list-style: none;
+    }
+    .wapper{
+        position:relative;   
+        height:200px;  
+        width:310px;
+        overflow: hidden;
+    }
+    .wapper .img-ct{
+        height: 200px;
+        width:1240px;  
+        position: absolute;
+    }
+    .wapper .img-ct>li{
+        float:left;
+    }
+    .img-ct:after{
+        content:'';
+        display: block;
+        clear:both;
+    }
+    .wapper .img-ct img{
+        width:310px;
+        height:200px;
+    }
+    .btn{
+        display:block;
+        width:30px;
+        height:30px;
+        text-align:center;
+        font-size: 20px;
+        line-height: 30px;
+        text-decoration: none;
+        color:#fff;
+        border-radius: 50%;
+        background-color: #333;
+        opacity: 0.6;
+        position: absolute;
+        top: 50%;
+        margin-top: -15px;        
+    }
+    .pre{left: 10px;}
+    .next{right: 10px;}
+    .btn-list{
+        position: absolute;
+        bottom:20px; 
+        left:50%;
+        transform:translate(-50%);
+    }
+    .btn-list:after{
+        content:'';
+        display: block;
+        clear:both;
+    }
+    .btn-list >li{
+        width:20px;
+        height:6px;
+        border-radius: 3px;
+        background-color: #fff;
+        float:left;
+        margin: 0 7px;
+        cursor: pointer;
+    }
+     .btn-list .active{
+         background-color: #666;
+     }
+    </style>
+</head>
+<body>
+    <div class="wapper">
+        <ul class="img-ct">
+            <li date-index=0><a href="javascript:;"><img src="http://cdn.jirengu.com/book.jirengu.com/img/26.jpg" alt=""></a></li>
+            <li date-index=1><a href="javascript:;"><img src="http://cdn.jirengu.com/book.jirengu.com/img/25.jpg" alt=""></a></li>
+            <li date-index=2><a href="javascript:;"><img src="http://cdn.jirengu.com/book.jirengu.com/img/24.jpg" alt=""></a></li>
+            <li date-index=3><a href="javascript:;"><img src="http://cdn.jirengu.com/book.jirengu.com/img/23.jpg" alt=""></a></li>
+        </ul>
+        <a class="btn pre" href="javascript:;"><strong>&lt</strong></a>
+        <a class="btn next" href="javascript:;"><strong>&gt</strong></a>
+        <ul class="btn-list">
+            <li class='active'></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script>
+    var $imgCt = $('.img-ct'),
+        $prebtn = $('.pre'),
+        $nextbtn = $('.next'),
+        $bullet = $('.btn-list'),
+        $firstImg = $imgCt.find('li').first(),
+        $lastImg = $imgCt.find('li').last();
+        
+    var imgLength =$imgCt.children().length;
+    var isAnimate = false;
+    var pageIndex = 0;
+
+    $imgCt.prepend($lastImg.clone())
+    $imgCt.append($firstImg.clone())
+    $imgCt.width($firstImg.width()*$imgCt.children().length)
+    $imgCt.css({'left':'-310px'})
+    
+    $prebtn.on('click', function(){
+    play(pageIndex - 1)
+    });
+    $nextbtn.on('click', function(){
+    play(pageIndex + 1)
+    });
+    $bullet.on('click', 'li', function(){
+    play($(this).index());
+    })
+
+    function play(index){
+        if(pageIndex === index) return;
+        if(isAnimate) return;
+        isAnimate = true;
+        $imgCt.animate({
+            left: '+=' + (pageIndex - index) * $firstImg.width()
+        }, function(){
+            pageIndex = index;
+            if(pageIndex === imgLength){
+                $imgCt.css({
+                    left: - $firstImg.width()
+                })
+                pageIndex = 0;
+            }
+            else if(pageIndex === -1){
+                $imgCt.css({
+                    left: - $firstImg.width() * imgLength
+                })
+                pageIndex = imgLength -1 ;
+            } 
+            isAnimate = false;
+            setArrt();
+            console.log('index: ' + index);
+            console.log('pageIndex: ' + pageIndex);
+        })
+    }
+
+    function nextP(){
+        if(isAnimate) return;
+        isAnimate = true;
+        $imgCt.animate({
+            left:'-=310'
+        },function(){
+         pageIndex++;
+         if(pageIndex === imgLength){
+             $imgCt.css({'left':'-310px'})
+             pageIndex = 0
+         }
+         isAnimate = false;
+         setArrt();
+       })
+    }
+    function lastP(){
+        if(isAnimate) return;
+        isAnimate = true;
+        $imgCt.animate({
+            left:'+=310'
+        },function(){
+         pageIndex--;
+         if(pageIndex < 0){
+             $imgCt.css({'left':'-1240px'})
+             pageIndex = imgLength - 1
+         }
+          isAnimate = false;
+          setArrt();
+       })
+    }
+    // $('.pre').on('click',function(){
+    //     lastP();
+    // })
+    // $('.next').on('click',function(){
+    //     nextP();
+    // })
+
+    function setArrt(){
+       $bullet.children().removeClass('active').eq(pageIndex).addClass('active')
+    }
+</script>
+</body>
+</html>
