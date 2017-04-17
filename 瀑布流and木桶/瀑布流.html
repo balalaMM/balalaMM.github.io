@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="jquery-3.2.0.js"></script>
+    <style>
+    *{margin: 0;padding: 0;}
+    .wapper{
+        position: relative;
+        margin: 0 auto;
+    }
+    .item{
+        position: absolute;
+        width:200px;
+        margin-top: 10px;
+        margin-right:5px;
+        margin-left:5px;
+        transition: all 1s; 
+    }
+    .sy1{
+        height: 250px;
+        background-color: pink;
+    }
+    .sy2{
+        height: 315px;
+        background-color: yellow;
+    }
+    .sy3{
+        height: 400px;
+        background-color: lightblue;
+    }
+    .sy4{
+        height: 375px;
+        background-color:greenyellow;
+    }
+    </style>
+</head>
+<body>
+    <div class="wapper">
+        <div class="item sy1">1</div>
+        <div class="item sy3">2</div>
+        <div class="item sy2">3</div>
+        <div class="item sy4">4</div>
+        <div class="item sy3">5</div>
+        <div class="item sy1">6</div>
+        <div class="item sy4">7</div>
+        <div class="item sy2">8</div>
+        <div class="item sy4">9</div>
+        <div class="item sy1">10</div>
+        <div class="item sy4">11</div>
+        <div class="item sy2">12</div>
+        <div class="item sy1">13</div>
+        <div class="item sy4">14</div>
+        <div class="item sy3">15</div>
+        <div class="item sy2">16</div>
+        <div class="item sy1">17</div>
+        <div class="item sy4">18</div>
+        <div class="item sy2">19</div>
+        <div class="item sy1">20</div>
+    </div>
+    <script> 
+    waterfull()
+    $(window).resize(function(){
+        waterfull();
+    })
+    function waterfull(){
+        var nodeWidth = $('.item').outerWidth(true);
+        var collength = parseInt($(window).width()/nodeWidth)
+        $('.wapper').width(nodeWidth*collength)
+        var itemArr = [];
+        for(var i=0;i<collength;i++){
+            itemArr[i]=0;
+        }
+        $('.item').each(function(){
+            var minHeight = Math.min.apply(null,itemArr)
+            var minIndex = itemArr.indexOf(minHeight)
+            $(this).css({
+                top:itemArr[minIndex],
+                left:$(this).outerWidth(true)*minIndex
+            })
+            itemArr[minIndex] += $(this).outerHeight(true);
+        })
+    }
+    </script>
+</body>
+</html>
